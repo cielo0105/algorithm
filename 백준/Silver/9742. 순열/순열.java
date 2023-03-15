@@ -40,6 +40,7 @@ public class Main {
 				System.out.print(word);
 				System.out.print(" "+ n+" = ");
 				System.out.println(arr);
+                return;
 			}
 		}
 		for (int i = 0; i < word.length; i++) {
@@ -52,4 +53,3 @@ public class Main {
 		}
 	}
 }
-
