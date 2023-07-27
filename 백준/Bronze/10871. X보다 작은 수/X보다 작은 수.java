@@ -8,17 +8,16 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
         int n = Integer.parseInt(st.nextToken());
         int x = Integer.parseInt(st.nextToken());
         String[] arr = br.readLine().split(" ");
         List<Integer> list = new ArrayList<>();
         for(String s:arr){
             if(Integer.parseInt(s) < x){
-                list.add(Integer.parseInt(s));
+                sb.append(s).append(" ");
             }
         }
-        for(int i:list){
-            System.out.print(i+" ");
-        }
+        System.out.println(sb);
     }
 }
