@@ -22,7 +22,7 @@ public class Main {
 		int L = Integer.parseInt(br.readLine());
 		int r = 31;
 		int M = 1234567891;
-		int sum = 0;
+		long sum = 0;
 		char[] word = br.readLine().toCharArray();
 		for(int i=0; i<L; i++) {
 			int ai = ((int)(word[i]-'a')+1);
