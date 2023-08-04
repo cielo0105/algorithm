@@ -4,11 +4,11 @@
 
 ### 성능 요약
 
-메모리: 34120 KB, 시간: 144 ms
+메모리: 12220 KB, 시간: 100 ms
 
 ### 분류
 
-자료 구조(data_structures), 구현(implementation), 큐(queue)
+자료 구조, 구현, 큐
 
 ### 문제 설명
 
