@@ -8,14 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.StringTokenizer;
-/**
 
-@author 임현지
-@since 2023. 8. 4.
-@note 
-*
-* queue
-*/
+
 public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,7 +21,7 @@ public class Main {
 		for(int i=0; i<L; i++) {
 			int ai = ((int)(word[i]-'a')+1);
 			
-			int ri = 1;
+			long ri = 1;
 			for(int j=0; j<i; j++) {
 				ri = (ri*r)%M;
 			}
