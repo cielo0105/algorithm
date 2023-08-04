@@ -23,6 +23,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
+		StringBuilder sb = new StringBuilder();
 		int n = Integer.parseInt(br.readLine());
 		Person[] person = new Person[n];
 		for(int i=0; i<n; i++) {
@@ -33,8 +34,9 @@ public class Main {
 		}
 		Arrays.sort(person,(a,b)->a.age-b.age);
 		for(Person p:person) {
-			System.out.println(p);
+			sb.append(p.toString()).append("\n");
 		}
+		System.out.println(sb);
 	}
 	
 	public static class Person{
