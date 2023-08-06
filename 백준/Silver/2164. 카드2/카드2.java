@@ -14,8 +14,11 @@ import java.util.StringTokenizer;
 @since 2023. 8. 4.
 @note 
 *
-* queue
-*
+* 제일 위에 있는 카드 버리고 그다음 제일 위에 있는 카드 맨 아래로 보냄
+* 카드 하나 남을 때까지 반복
+* Queue 사용
+* poll(), offer() 모두 시간복잡도 O(n)
+* 1 ≤ N ≤ 500,000  2초
 */
 public class Main {
 	public static void main(String[] args) throws IOException {
@@ -23,13 +26,13 @@ public class Main {
 		int N = Integer.parseInt(br.readLine());
 		Queue<Integer> queue = new ArrayDeque<>();
 		for(int i=1; i<=N; i++) {
-			queue.add(i);
+			queue.offer(i);
 		}
 		while(queue.size()>1) { // 하나만 남은 경우 빠져나옴
-			queue.remove(); // 하나 버리기
-			queue.add(queue.poll()); // 맨 위의 카드 맨 아래로 보내기
+			queue.poll(); // 하나 버리기
+			queue.offer(queue.poll()); // 맨 위의 카드 맨 아래로 보내기
 		}
-		System.out.println(queue.poll());
+		System.out.println(queue.peek()); // 맨 위에 있는 카드 출력
 	}
 	
 }
