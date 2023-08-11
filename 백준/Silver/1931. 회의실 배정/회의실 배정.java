@@ -1,28 +1,50 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.StringTokenizer;
+/*
+    회의실 1개에 N개의 회의 배정
+    끝나는 시간 기준으로 정렬
+*/
 
 public class Main {
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
-		int[][] time = new int[n][2];
-		for (int i = 0; i < n; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			time[i][0] = Integer.parseInt(st.nextToken());
-			time[i][1] = Integer.parseInt(st.nextToken());
-		}
-		Arrays.sort(time,(o1,o2) -> o1[1]==o2[1]? o1[0]-o2[0]:o1[1]-o2[1]);
-		int cnt = 1;
-		int end = time[0][1];
-		for (int i = 1; i < n; i++) {
-			if(time[i][0]>=end) {
-				end = time[i][1];
-				cnt ++;
-			}
-		}
-		System.out.println(cnt);
-	}
-}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        int N = Integer.parseInt(br.readLine());
+        Time[] meeting = new Time[N];
+        for(int i=0; i<N; i++){
+            st = new StringTokenizer(br.readLine());
+            meeting[i] = new Time(Integer.parseInt(st.nextToken()),Integer.parseInt(st.nextToken()));
+        }
+        Arrays.sort(meeting, (a, b) -> {
+            if(a.end==b.end) return a.start-b.start;
+            return a.end - b.end;
+        });
+        int answer = 1;
+        int end = meeting[0].end;
+        for(int i=1; i<N; i++){
+            if(meeting[i].start >= end){
+                end = meeting[i].end;
+                answer ++;
+            }
+        }
+        System.out.println(answer);
+    }
+
+    public static class Time{
+        int start,end;
+        public Time(int start, int end){
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        public String toString() {
+            return this.start+" "+this.end;
+        }
+    }
+ }
