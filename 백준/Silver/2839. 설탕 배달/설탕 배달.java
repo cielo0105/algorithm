@@ -1,26 +1,30 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-public class Main
-{
-    static int n;
-    static int answer = -1;
+/*
+ 정확히 N kg 배달
+ 3,5kg 봉지
+ */
+public class Main {
+    static int N;
     static int flag = 0;
-    public static void main(String args[]) throws IOException {
+    static int min = Integer.MAX_VALUE;
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        // 3kg, 5kg 봉지 - 최대한 봉지 적게  (중복조합)
-        n = Integer.parseInt(br.readLine());
+        N = Integer.parseInt(br.readLine());
         find(0,0);
-        System.out.println(answer);
+        if(min == Integer.MAX_VALUE) System.out.println(-1);
+        else System.out.println(min);
     }
-    static void find(int w, int cnt){ // w는 현재까지 무게
-        if(w>n || flag == 1) return;
-        if(w==n) {
-            answer = cnt;
+    static void find(int cnt, int total){
+        if(total > N || flag == 1) return;
+        if(total == N){
+            min = min > cnt ? cnt : min;
             flag = 1;
             return;
         }
-        find(w+5,cnt+1);
-        find(w+3,cnt+1);
+        find(cnt+1, total+5);
+        find(cnt+1,total+3);
     }
 }
