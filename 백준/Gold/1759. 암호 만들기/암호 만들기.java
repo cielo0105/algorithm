@@ -1,51 +1,56 @@
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
+/*
+    서로 다른 알파벳 L개로 구성
+    최소 1개의 모음, 2개의 자음
+    알파벳순
+    가능한 알파벳 C개
+ */
 public class Main {
-	private static int l,c;
-	private static String[] arr;
-	private static String[] pw;
-	private static boolean[] visited;
-	private static String[] v = new String[] {"a","e","i","o","u"};
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		l = sc.nextInt();
-		c = sc.nextInt();
-		arr = new String[c];
-		pw = new String[l];
-		visited = new boolean[c];
-		for (int i = 0; i < c; i++) {
-			arr[i] = sc.next();
-		}
-		Arrays.sort(arr);
-//		System.out.println(Arrays.asList(v).contains(arr[0]));
-		permutation(0,0);
-	}
-	
-	static void permutation(int cnt, int ind) {
-		if(cnt == l) {
-			int a = 0;
-			int b = 0;
-			for (String s : pw) {
-				if (Arrays.asList(v).contains(s)) a++; // 모음인 경우
-				else b++;
-			}
-			if(a>=1 && b>=2) {
-				for (String s : pw) {
-					System.out.print(s);
-				}
-				System.out.println();
-			}
-			return;
-		}
-		for (int i = ind; i < c; i++) {
-			if(!visited[i]) {
-				pw[cnt] = arr[i];
-				visited[i] = true;
-				permutation(cnt+1,i);
-				visited[i] = false;
-			}
-		}
-	}
+    static String[] vowel = {"a","e","i","o","u"};
+    static String[] alpha;
+    static int L,C;
+    static StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        L = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        alpha = br.readLine().split(" ");
+        Arrays.sort(alpha);
+        find(0,0,new String[L],0,0);
+        System.out.println(sb);
+    }
+    static void add(String[] choose){
+        for(String c:choose){
+            sb.append(c);
+        }
+        sb.append("\n");
+    }
+    static boolean isVowel(String s){
+        for(String v: vowel){
+            if(s.equals(v)) return true;
+        }
+        return false;
+    }
+    static void find(int vo,int co,String[] choose, int start,int depth){
+        if(depth == L){
+            if(vo>=1 && co>=2){
+                add(choose);
+            }
+            return;
+        }
+        for(int i=start; i<C; i++){
+            choose[depth] = alpha[i];
+            if(isVowel(alpha[i])) {
+                find(vo+1,co,choose,i+1, depth+1);
+            }
+            else find(vo,co+1,choose,i+1,depth+1);
+        }
+
+    }
 }
