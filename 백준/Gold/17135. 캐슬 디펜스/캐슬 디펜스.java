@@ -5,18 +5,23 @@ import java.util.*;
 
 /*
     N*M
-    N+1번행에 성이 있음
+    N+1번 행에 성이 있음
     성을 지키기 위해 3명의 궁수 배치
     - 거리 D 이하인 적 중 가장 가까운 적 동시에 공격
     - 여러명인 경우 가장 왼쪽에 있는 적 공격
-    - 적은 각 턴마다 한 칸 아래로 이동
-
+    - 적은 각 턴마다 한 칸 아래로 이동 (적 이동시키지 않고 궁수 위치를 위쪽으로 한칸씩 전진시킴)
+    
+    1. 조합을 이용하여 궁수 3명을 선택
+    2. 각 턴마다 궁수 3명이 어떤 적을 죽일지 왼쪽, 위쪽, 오른쪽 순서로 탐색 (중복 가능)
+      - 탐색을 하다가 D(최대 거리보다 먼 경우 null 반환)
+      - boolean 배열에 죽일 적 위치 false였으면 true로 바꾸고 cnt(제거한 적) 1 증가
+    3. 모든 궁수가 어떤 적 죽일지 골랐다면 이중for문 돌면서 한번에 제거
+    4. 모든 조합 다 확인하면서 죽일 수 있는 최대 적 찾기 
  */
 public class Main {
     static int N,M,D, cnt;
     static int[][] map, copyMap;
     static int max = Integer.MIN_VALUE;
-    static boolean[][] visited;
     static int[][] deltas = {{0,-1},{-1,0},{0,1}}; // 왼쪽, 위, 오른쪽 순서로 탐색
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,9 +40,9 @@ public class Main {
         choose(0,0,new int[3]);
         System.out.println(max);
     }
-    static void choose(int depth, int start, int[] choose){
+    static void choose(int depth, int start, int[] choose){  // 조합을 통해 궁수 3명 고르기
         if(depth == 3){ // 궁수 3명 위치 선택 완료한 경우
-            check(choose);
+            check(choose); 
             return;
         }
         for(int i=start; i<M; i++){
@@ -46,19 +51,19 @@ public class Main {
         }
     }
 
-    static void check(int[] choose){ // 한 턴 끝나면 궁수 x위치 -1 해줌
-        boolean[][] kill = new boolean[N][M];
-        copyMap = map.clone();
-        for(int i=0; i<N; i++){
+    static void check(int[] choose){ // 3명의 궁수가 몇 명의 적을 죽일 수 있는지 확인하는 메서드
+        boolean[][] kill = new boolean[N][M];  // 어느 적 죽일지 저장해놓는 배열
+        copyMap = new int[N][M];
+        for(int i=0; i<N; i++){  // 2차원 배열 복사
             copyMap[i] = map[i].clone();
         }
-        cnt = 0;
-        visited = new boolean[N][M];
-        for(int i=0; i<N; i++){
-            for(int nth: choose){
-                Enemy enemy = bfs(N-i,nth);
-                if(enemy == null) continue;
-                if(!kill[enemy.x][enemy.y]){
+        cnt = 0; // 제거한 적 수 
+        for(int i=0; i<N; i++){  // 총 N턴 동안 반복
+            for(int nth: choose){  // 각 궁수에 대해 bfs 탐색
+                // 궁수의 위치 한 턴 끝나면 x-1 해줘서 앞으로 전진시킴, y값은 동일
+                Enemy enemy = bfs(N-i,nth);  // 궁수가 죽일 적 위치 반환함
+                if(enemy == null) continue;  // null인 경우 해당 궁수는 범위 내에 죽일 적이 없다는 뜻임
+                if(!kill[enemy.x][enemy.y]){  // 처음 죽이는 적일 경우
                     kill[enemy.x][enemy.y] = true;
                     cnt++;
                 }
@@ -77,20 +82,20 @@ public class Main {
         Queue<Enemy> queue = new ArrayDeque<>();
 
         queue.add(new Enemy(x,y,0)); // 처음 궁수 위치
-        int map_length = x;
+        int map_length = x;  // 맵의 세로 길이 저장
         while(!queue.isEmpty()){
             Enemy location = queue.poll();
             x = location.x;
             y = location.y;
             int depth = location.dist;
-            if(depth > D) return null;
-            for(int i=0; i<3; i++){
+            if(depth > D) return null;  // 적의 거리가 공격 가능한 범위보다 멀면 null 반환
+            for(int i=0; i<3; i++){  // 왼쪽, 위, 오른쪽 순으로 탐색 (왼쪽 적 우선 죽이기 때문)
                 int nx = x + deltas[i][0];
                 int ny = y + deltas[i][1];
-                if(nx>=0 && nx<map_length && ny>=0 && ny<M && !visited[nx][ny]){
+                if(nx>=0 && nx<map_length && ny>=0 && ny<M){
                     if(copyMap[nx][ny] == 1) {
-                        if(depth+1 <= D) return new Enemy(nx,ny,depth+1);
-                        return null;
+                        if(depth+1 <= D) return new Enemy(nx,ny,depth+1); //공격 범위 안에 있는 적
+                        return null; // 공격 범위 넘어간 경우
                     }
                     queue.add(new Enemy(nx,ny,depth+1));
                 }
